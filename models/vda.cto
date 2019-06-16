@@ -1,0 +1,87 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+/**
+ * Model based on the DVLA item definition and registration process
+ */
+namespace org.vda
+import composer.base.Person
+/**
+ * Based on DVLA document V355/1
+ */
+enum TaxClass {
+  o PAPER
+  o ELECTRICAL
+  o ELECTRONICS
+  o FASHION
+}
+concept ItemDetails {
+  o String make
+  o String modelType
+  o String colour
+  o String modelVariant optional
+  o String modelVersion optional
+  o TaxClass taxationClass optional
+  o Integer revenueWeight optional
+  o String itemCategory optional
+  o String typeApprovalNumber optional
+  o Double massInService optional
+}
+concept ItemTransferLogEntry {
+  --> Item item
+  --> Person buyer
+  --> Person seller optional
+  o DateTime timestamp
+}
+
+transaction ApplicationForItemRegistrationCertificate {
+  o ItemDetails itemDetails
+  --> Person keeper
+  o Long mileage optional
+  o String previousPostCode optional
+}
+abstract transaction ItemTransaction  {
+  --> Item item
+}
+
+transaction PrivateItemTransfer extends ItemTransaction {
+  --> Person seller
+  --> Person buyer
+  o String specialNotes optional
+}
+enum ItemStatus {
+  o ACTIVE
+  o SPOILT
+  o SCRAPPED
+}
+asset Item identified by vin {
+  o String vin
+  o ItemDetails itemDetails
+  o ItemStatus itemStatus
+  --> Person owner optional
+  o String suspiciousMessage optional
+  o ItemTransferLogEntry[] logEntries optional
+}
+transaction ScrapItem extends ItemTransaction {
+  o ItemTransaction[] logEntries optional
+}
+transaction UpdateSuspicious extends ItemTransaction {
+  o String message
+}
+transaction ScrapAllItemsByColour  {
+  o String colour
+}
+event ScrapItemEvent {
+  --> Item item
+}
