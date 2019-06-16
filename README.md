@@ -12,7 +12,7 @@ Using the Hyperledger blockchain, we can track the process of paper recycling fr
 
 ## How I built it
 
-This project was built with Hyperledger blockchain, and Angular as frontend, for the National Blockchain Challenge 2019 hackathon.
+This project was built with Hyperledger blockchain, and Angular as frontend, for the National Blockchain Challenge 2019 hackathon (nbc.devpost.com).
  
 ## Quick start
 
